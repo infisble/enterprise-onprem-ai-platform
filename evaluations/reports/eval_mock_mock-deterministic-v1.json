@@ -1,0 +1,225 @@
+{
+  "run_at": "2026-09-30T23:45:34+00:00",
+  "provider": "mock",
+  "model": "mock-deterministic-v1",
+  "embeddings": "hash",
+  "reranker": "feature",
+  "cases": 82,
+  "overall": {
+    "pass_rate": 0.805,
+    "mean_score": 0.881,
+    "p50_latency_ms": 31.5,
+    "output_tokens_per_sec": 1384.6
+  },
+  "categories": {
+    "cs_qa": {
+      "cases": 8,
+      "pass_rate": 0.25,
+      "mean_score": 0.562,
+      "language_accuracy": 0.375,
+      "p50_latency_ms": 31.6
+    },
+    "extraction": {
+      "cases": 14,
+      "pass_rate": 0.929,
+      "mean_score": 0.976,
+      "language_accuracy": null,
+      "p50_latency_ms": 0.1
+    },
+    "product_description": {
+      "cases": 8,
+      "pass_rate": 1.0,
+      "mean_score": 0.922,
+      "language_accuracy": 1.0,
+      "p50_latency_ms": 44.2
+    },
+    "product_search": {
+      "cases": 10,
+      "pass_rate": 1.0,
+      "mean_score": 1.0,
+      "language_accuracy": null,
+      "p50_latency_ms": 39.0
+    },
+    "rag": {
+      "cases": 12,
+      "pass_rate": 0.75,
+      "mean_score": 0.875,
+      "language_accuracy": 0.917,
+      "p50_latency_ms": 51.3
+    },
+    "sk_qa": {
+      "cases": 10,
+      "pass_rate": 0.5,
+      "mean_score": 0.7,
+      "language_accuracy": 1.0,
+      "p50_latency_ms": 38.9
+    },
+    "tool_selection": {
+      "cases": 12,
+      "pass_rate": 1.0,
+      "mean_score": 1.0,
+      "language_accuracy": null,
+      "p50_latency_ms": 0.1
+    },
+    "translation": {
+      "cases": 8,
+      "pass_rate": 0.875,
+      "mean_score": 0.898,
+      "language_accuracy": null,
+      "p50_latency_ms": 17.0
+    }
+  },
+  "candidates": {
+    "criteria": [
+      "slovak_quality",
+      "czech_quality",
+      "extraction",
+      "json_output",
+      "tool_calling",
+      "rag_quality",
+      "latency",
+      "throughput",
+      "vram",
+      "context_length"
+    ],
+    "candidates": [
+      {
+        "model": "mock-deterministic-v1",
+        "role": "CI / demo baseline (rule-grounded, no GPU)",
+        "params_b": 0,
+        "vram_weights_gb": {
+          "fp16": 0
+        },
+        "context": "n/a",
+        "tool_calling": "rule-based router",
+        "notes": "Establishes the floor; real models must beat it on sk_qa, translation and descriptions."
+      },
+      {
+        "model": "Qwen/Qwen2.5-7B-Instruct",
+        "params_b": 7.6,
+        "vram_weights_gb": {
+          "fp16": 15,
+          "int8": 8,
+          "awq_4bit": 5
+        },
+        "context": "32k (128k with YaRN)",
+        "tool_calling": "yes (vLLM hermes parser)",
+        "expected": {
+          "slovak": "fair",
+          "czech": "fair",
+          "json": "good",
+          "latency": "excellent"
+        },
+        "fits": "RTX 4090 24 GB / L4 24 GB (AWQ, 16k ctx, ~10 concurrent)"
+      },
+      {
+        "model": "Qwen/Qwen2.5-14B-Instruct",
+        "params_b": 14.7,
+        "vram_weights_gb": {
+          "fp16": 29,
+          "int8": 15,
+          "awq_4bit": 9
+        },
+        "context": "32k (128k with YaRN)",
+        "tool_calling": "yes (vLLM hermes parser)",
+        "expected": {
+          "slovak": "good",
+          "czech": "good",
+          "json": "very good",
+          "latency": "good"
+        },
+        "fits": "L40S / RTX 6000 Ada 48 GB (AWQ or FP8) - recommended starting point"
+      },
+      {
+        "model": "Qwen/Qwen2.5-32B-Instruct",
+        "params_b": 32.5,
+        "vram_weights_gb": {
+          "fp16": 65,
+          "int8": 33,
+          "awq_4bit": 18
+        },
+        "context": "32k (128k with YaRN)",
+        "tool_calling": true,
+        "expected": {
+          "slovak": "very good",
+          "czech": "very good",
+          "json": "very good",
+          "latency": "fair"
+        },
+        "fits": "48 GB with AWQ (limited KV cache) / A100-H100 80 GB"
+      },
+      {
+        "model": "meta-llama/Llama-3.1-8B-Instruct",
+        "params_b": 8.0,
+        "vram_weights_gb": {
+          "fp16": 16,
+          "int8": 8,
+          "awq_4bit": 5.5
+        },
+        "context": "128k",
+        "tool_calling": "yes (llama3_json parser)",
+        "expected": {
+          "slovak": "fair",
+          "czech": "fair",
+          "json": "good",
+          "latency": "excellent"
+        },
+        "notes": "Llama community licence; check acceptable-use terms."
+      },
+      {
+        "model": "mistralai/Mistral-Small-24B-Instruct-2501",
+        "params_b": 24,
+        "vram_weights_gb": {
+          "fp16": 48,
+          "int8": 24,
+          "awq_4bit": 14
+        },
+        "context": "32k",
+        "tool_calling": "yes (mistral parser)",
+        "expected": {
+          "slovak": "good",
+          "czech": "good",
+          "json": "good",
+          "latency": "good"
+        },
+        "notes": "Apache-2.0."
+      },
+      {
+        "model": "google/gemma-2-27b-it",
+        "params_b": 27,
+        "vram_weights_gb": {
+          "fp16": 54,
+          "int8": 27,
+          "awq_4bit": 16
+        },
+        "context": "8k",
+        "tool_calling": "prompt-based only",
+        "expected": {
+          "slovak": "good",
+          "czech": "good",
+          "json": "fair",
+          "latency": "fair"
+        },
+        "notes": "Short context limits RAG; Gemma licence."
+      },
+      {
+        "model": "utter-project/EuroLLM-9B-Instruct",
+        "params_b": 9,
+        "vram_weights_gb": {
+          "fp16": 18,
+          "int8": 9,
+          "awq_4bit": 6
+        },
+        "context": "4k",
+        "tool_calling": "no native support",
+        "expected": {
+          "slovak": "good",
+          "czech": "good",
+          "json": "fair",
+          "latency": "excellent"
+        },
+        "notes": "Trained with explicit coverage of EU languages incl. SK/CS; strong translation candidate for the batch pipeline even if not used for chat."
+      }
+    ]
+  }
+}

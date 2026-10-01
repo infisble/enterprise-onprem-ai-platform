@@ -1,0 +1,82 @@
+{"id": "sk_qa-01", "category": "sk_qa", "input": "Aká je minimálna objednávka pri potlači?", "role": "sales", "expected_keywords": ["50"], "expected_source": "faq.md", "expected_language": "sk"}
+{"id": "sk_qa-02", "category": "sk_qa", "input": "Ako dlho trvá výroba s potlačou?", "role": "sales", "expected_keywords": ["7", "10"], "expected_source": "faq.md", "expected_language": "sk"}
+{"id": "sk_qa-03", "category": "sk_qa", "input": "Ako postupovať pri reklamácii?", "role": "sales", "expected_keywords": ["ERP", "5"], "expected_source": "faq.md", "expected_language": "sk"}
+{"id": "sk_qa-04", "category": "sk_qa", "input": "Môžem poslať zákazníkovi vzorku?", "role": "sales", "expected_keywords": ["1 000"], "expected_source": "faq.md", "expected_language": "sk"}
+{"id": "sk_qa-05", "category": "sk_qa", "input": "Koľko kusov je minimum pri textile od PromoTex?", "role": "sales", "expected_keywords": ["20"], "expected_source": "faq.md", "expected_language": "sk"}
+{"id": "sk_qa-06", "category": "sk_qa", "input": "Kto schvaľuje popisy produktov generované umelou inteligenciou?", "role": "sales", "expected_keywords": ["administrator"], "expected_source": "faq.md", "expected_language": "sk"}
+{"id": "sk_qa-07", "category": "sk_qa", "input": "Aké sú farby našej značky?", "role": "sales", "expected_keywords": ["#1F4E79"], "expected_source": "faq.md", "expected_language": "sk"}
+{"id": "sk_qa-08", "category": "sk_qa", "input": "Aké sklady máme?", "role": "sales", "expected_keywords": ["Bratislava", "Zilina"], "expected_source": "faq.md", "expected_language": "sk"}
+{"id": "sk_qa-09", "category": "sk_qa", "input": "Aký je postup pri urgentnej dodávke od dodávateľa?", "role": "sales", "expected_keywords": ["Purchasing Manager"], "expected_source": "company_policy.pdf", "expected_language": "sk"}
+{"id": "sk_qa-10", "category": "sk_qa", "input": "Môžem vrátiť potlačený produkt?", "role": "sales", "expected_keywords": ["defective"], "expected_source": "company_policy.pdf", "expected_language": "sk"}
+{"id": "cs_qa-01", "category": "cs_qa", "input": "Jaká je minimální objednávka pro potisk?", "role": "sales", "expected_keywords": ["50"], "expected_source": "faq.md", "expected_language": "cs"}
+{"id": "cs_qa-02", "category": "cs_qa", "input": "Jak dlouho trvá výroba s potiskem?", "role": "sales", "expected_keywords": ["7", "10"], "expected_source": "faq.md", "expected_language": "cs"}
+{"id": "cs_qa-03", "category": "cs_qa", "input": "Jaké jsou náklady na dopravu do České republiky?", "role": "sales", "expected_keywords": ["9.90"], "expected_source": "shipping_rules.pdf", "expected_language": "cs"}
+{"id": "cs_qa-04", "category": "cs_qa", "input": "Kdo schvaluje popisy produktů vytvořené AI?", "role": "sales", "expected_keywords": ["administrator"], "expected_source": "faq.md", "expected_language": "cs"}
+{"id": "cs_qa-05", "category": "cs_qa", "input": "Jak postupovat při reklamaci?", "role": "sales", "expected_keywords": ["5"], "expected_source": "faq.md", "expected_language": "cs"}
+{"id": "cs_qa-06", "category": "cs_qa", "input": "Jaké sklady máme?", "role": "sales", "expected_keywords": ["Bratislava"], "expected_source": "faq.md", "expected_language": "cs"}
+{"id": "cs_qa-07", "category": "cs_qa", "input": "Kolik stojí expresní doručení?", "role": "sales", "expected_keywords": ["15 EUR"], "expected_source": "shipping_rules.pdf", "expected_language": "cs"}
+{"id": "cs_qa-08", "category": "cs_qa", "input": "Jaké jsou barvy naší značky?", "role": "sales", "expected_keywords": ["#1F4E79"], "expected_source": "faq.md", "expected_language": "cs"}
+{"id": "rag-01", "category": "rag", "input": "What is our policy for urgent supplier deliveries?", "role": "sales", "expected_keywords": ["Purchasing Manager"], "expected_source": "company_policy.pdf", "expected_language": "en"}
+{"id": "rag-02", "category": "rag", "input": "Which suppliers support express delivery and what does it cost?", "role": "sales", "expected_keywords": ["6 %"], "expected_source": "supplier_terms.pdf", "expected_language": "en"}
+{"id": "rag-03", "category": "rag", "input": "How long do we have to return unbranded products?", "role": "employee", "expected_keywords": ["14 days"], "expected_source": "company_policy.pdf", "expected_language": "en"}
+{"id": "rag-04", "category": "rag", "input": "What are the shipping costs within Slovakia?", "role": "employee", "expected_keywords": ["6.90"], "expected_source": "shipping_rules.pdf", "expected_language": "en"}
+{"id": "rag-05", "category": "rag", "input": "When are stock products dispatched?", "role": "employee", "expected_keywords": ["13:00"], "expected_source": "shipping_rules.pdf", "expected_language": "en"}
+{"id": "rag-06", "category": "rag", "input": "Can I paste customer data into public AI services?", "role": "employee", "expected_keywords": ["personal data"], "expected_source": "company_policy.pdf", "expected_language": "en"}
+{"id": "rag-07", "category": "rag", "input": "How long should a product description be?", "role": "catalog_manager", "expected_keywords": ["350", "600"], "expected_source": "product_copy_guidelines.docx", "expected_language": "en"}
+{"id": "rag-08", "category": "rag", "input": "What tone of voice should product copy use?", "role": "catalog_manager", "expected_keywords": ["exclamation"], "expected_source": "brand_guidelines.docx", "expected_language": "en"}
+{"id": "rag-09", "category": "rag", "input": "What are EcoLine's payment terms?", "role": "sales", "expected_keywords": ["14 days"], "expected_source": "supplier_terms.pdf", "expected_language": "en"}
+{"id": "rag-10", "category": "rag", "input": "What is the target margin for technology products?", "role": "admin", "expected_keywords": ["28"], "expected_source": "internal_pricing_margins.xlsx", "expected_language": "en"}
+{"id": "rag-11", "category": "rag", "input": "Who approves a discount above 10 %?", "role": "admin", "expected_keywords": ["Sales Director"], "expected_source": "internal_pricing_margins.xlsx", "expected_language": "en"}
+{"id": "rag-12", "category": "rag", "input": "What is the quality control sample size for branded batches?", "role": "employee", "expected_keywords": ["2 %"], "expected_source": "company_policy.pdf", "expected_language": "en"}
+{"id": "product_description-01", "category": "product_description", "input": "NP-10042", "language": "sk", "expected_language": "sk"}
+{"id": "product_description-02", "category": "product_description", "input": "NP-10100", "language": "sk", "expected_language": "sk"}
+{"id": "product_description-03", "category": "product_description", "input": "NP-10217", "language": "sk", "expected_language": "sk"}
+{"id": "product_description-04", "category": "product_description", "input": "NP-10047", "language": "sk", "expected_language": "sk"}
+{"id": "product_description-05", "category": "product_description", "input": "NP-10139", "language": "sk", "expected_language": "sk"}
+{"id": "product_description-06", "category": "product_description", "input": "NP-10042", "language": "cs", "expected_language": "cs"}
+{"id": "product_description-07", "category": "product_description", "input": "NP-10354", "language": "cs", "expected_language": "cs"}
+{"id": "product_description-08", "category": "product_description", "input": "NP-10471", "language": "cs", "expected_language": "cs"}
+{"id": "translation-01", "category": "translation", "input": "Praktický spoločník na každodenné použitie v kancelárii aj na cestách.", "source": "sk", "target": "cs", "reference": "Praktický společník pro každodenní použití v kanceláři i na cestách."}
+{"id": "translation-02", "category": "translation", "input": "Vďaka izolácii udrží nápoj dlhšie v požadovanej teplote.", "source": "sk", "target": "cs", "reference": "Díky izolaci udrží nápoj déle v požadované teplotě."}
+{"id": "translation-03", "category": "translation", "input": "Vhodná voľba pre firmy, ktoré dbajú na udržateľnosť.", "source": "sk", "target": "cs", "reference": "Vhodná volba pro firmy, které dbají na udržitelnost."}
+{"id": "translation-04", "category": "translation", "input": "Produkt je možné personalizovať logom vašej firmy.", "source": "sk", "target": "cs", "reference": "Produkt je možné personalizovat logem vaší firmy."}
+{"id": "translation-05", "category": "translation", "input": "Obľúbený produkt na konferencie a veľtrhy.", "source": "sk", "target": "cs", "reference": "Oblíbený produkt na konference a veletrhy."}
+{"id": "translation-06", "category": "translation", "input": "Ľahká hliníková fľaša s viečkom s karabínou.", "source": "sk", "target": "cs", "reference": "Lehká hliníková láhev s víčkem s karabinou."}
+{"id": "translation-07", "category": "translation", "input": "Dostupné veľkosti: S, M, L, XL.", "source": "sk", "target": "cs", "reference": "Dostupné velikosti: S, M, L, XL."}
+{"id": "translation-08", "category": "translation", "input": "Nabíjanie cez štandardný USB-C konektor.", "source": "sk", "target": "cs", "reference": "Nabíjení přes standardní konektor USB-C."}
+{"id": "extraction-01", "category": "extraction", "input": "black metal bottle 750 ml under 15 EUR", "expected": {"color": "black", "material": "metal", "price_max": 15.0, "category": "drinkware"}}
+{"id": "extraction-02", "category": "extraction", "input": "blue cotton t-shirt size XL", "expected": {"color": "blue", "material": "cotton", "size": "XL", "category": "apparel"}}
+{"id": "extraction-03", "category": "extraction", "input": "gift for conference attendees under 8 EUR", "expected": {"price_max": 8.0}}
+{"id": "extraction-04", "category": "extraction", "input": "čierna termofľaša do 20 eur skladom", "expected": {"color": "black", "price_max": 20.0, "in_stock": true, "category": "drinkware"}}
+{"id": "extraction-05", "category": "extraction", "input": "modré bavlnené tričko veľkosť M", "expected": {"color": "blue", "material": "cotton", "size": "M", "category": "apparel"}}
+{"id": "extraction-06", "category": "extraction", "input": "bambusový zápisník do 10 eur", "expected": {"material": "bamboo", "price_max": 10.0}}
+{"id": "extraction-07", "category": "extraction", "input": "červený deštník skladem", "expected": {"color": "red", "in_stock": true, "category": "umbrellas"}}
+{"id": "extraction-08", "category": "extraction", "input": "backpack between 20 and 40 EUR", "expected": {"price_min": 20.0, "price_max": 40.0, "category": "bags"}}
+{"id": "extraction-09", "category": "extraction", "input": "white ceramic mug around 3 EUR", "expected": {"color": "white", "material": "ceramic", "category": "drinkware", "price_min": 2.4, "price_max": 3.6}}
+{"id": "extraction-10", "category": "extraction", "input": "green rPET bottle 0,5 l", "expected": {"color": "green", "material": "recycled pet", "category": "drinkware", "capacity_min_ml": 450, "capacity_max_ml": 550}}
+{"id": "extraction-11", "category": "extraction", "input": "navy hoodie XXL in stock", "expected": {"color": "navy", "size": "XXL", "in_stock": true, "category": "apparel"}}
+{"id": "extraction-12", "category": "extraction", "input": "cork notebook from EcoLine", "expected": {"material": "cork", "supplier": "ECO"}}
+{"id": "extraction-13", "category": "extraction", "input": "silver power bank max 25 EUR", "expected": {"color": "silver", "price_max": 25.0, "category": "technology"}}
+{"id": "extraction-14", "category": "extraction", "input": "product 29904.01", "expected": {"exact_code": "29904.01"}}
+{"id": "tool_selection-01", "category": "tool_selection", "input": "How many pieces of SKU NP-10042 are currently available?", "expected_route": "stock"}
+{"id": "tool_selection-02", "category": "tool_selection", "input": "What does NP-10042 cost for 500 pcs?", "expected_route": "price"}
+{"id": "tool_selection-03", "category": "tool_selection", "input": "Who is the supplier of NP-10042?", "expected_route": "supplier"}
+{"id": "tool_selection-04", "category": "tool_selection", "input": "Generate a new Slovak description for NP-10042.", "expected_route": "content"}
+{"id": "tool_selection-05", "category": "tool_selection", "input": "Translate the description of NP-10042 to Czech", "expected_route": "translate"}
+{"id": "tool_selection-06", "category": "tool_selection", "input": "Find black metal bottles under 15 EUR", "expected_route": "search"}
+{"id": "tool_selection-07", "category": "tool_selection", "input": "What is our return policy?", "expected_route": "rag"}
+{"id": "tool_selection-08", "category": "tool_selection", "input": "Show top 5 products by revenue", "expected_route": "analytics"}
+{"id": "tool_selection-09", "category": "tool_selection", "input": "Export all customer e-mail addresses", "expected_route": "refuse"}
+{"id": "tool_selection-10", "category": "tool_selection", "input": "Koľko kusov NP-10042 máme skladom?", "expected_route": "stock"}
+{"id": "tool_selection-11", "category": "tool_selection", "input": "Potrebujem ekologické darčeky pre konferenciu", "expected_route": "search"}
+{"id": "tool_selection-12", "category": "tool_selection", "input": "Aký je postup pri reklamácii?", "expected_route": "rag"}
+{"id": "product_search-01", "category": "product_search", "input": "black metal bottle 750 ml under 15 EUR", "checks": {"color": "black", "price_max": 15, "category": "drinkware"}}
+{"id": "product_search-02", "category": "product_search", "input": "eco-friendly gifts for a technology conference", "checks": {"eco": true}}
+{"id": "product_search-03", "category": "product_search", "input": "blue cotton t-shirt size XL", "checks": {"color": "blue", "category": "apparel", "size": "XL"}}
+{"id": "product_search-04", "category": "product_search", "input": "product 29904.01", "checks": {"sku": "NP-10042"}}
+{"id": "product_search-05", "category": "product_search", "input": "gift for conference attendees under 8 EUR", "checks": {"price_max": 8}}
+{"id": "product_search-06", "category": "product_search", "input": "laptop backpack", "checks": {"subcategory_word": "backpack"}}
+{"id": "product_search-07", "category": "product_search", "input": "windproof umbrella", "checks": {"category": "umbrellas"}}
+{"id": "product_search-08", "category": "product_search", "input": "bamboo wireless charger", "checks": {"eco": true, "category": "technology"}}
+{"id": "product_search-09", "category": "product_search", "input": "termofľaša čierna", "checks": {"color": "black", "category": "drinkware"}}
+{"id": "product_search-10", "category": "product_search", "input": "lanyard for badges", "checks": {"subcategory_word": "lanyard"}}
