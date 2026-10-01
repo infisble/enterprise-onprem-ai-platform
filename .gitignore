@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Local runtime data (SQLite, embedded Qdrant, logs)
+.data/
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Node / web
+node_modules/
+apps/web/dist/
+*.tsbuildinfo
+
+# Diagram tooling
+diagrams/.puppeteer/
+node_modules
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Evaluation scratch (reports committed intentionally)
+evaluations/reports/*.tmp
