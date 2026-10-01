@@ -1,0 +1,180 @@
+# NovaPromo enterprise AI platform - local / on-prem deployment.
+#
+#   cp .env.example .env
+#   docker compose up --build -d                        # core stack (bootstrap runs automatically)
+#   docker compose --profile monitoring up -d           # + Prometheus & Grafana
+#   docker compose --profile vllm up -d                 # + vLLM on an NVIDIA GPU host
+#
+# Only the web UI and API are published on the host. Databases stay on the internal network.
+
+x-app-env: &app-env
+  APP_ENV: docker
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  LOG_JSON: "true"
+  DATABASE_URL: postgresql+psycopg://novapromo:${POSTGRES_PASSWORD:-novapromo}@postgres:5432/novapromo
+  ANALYTICS_DATABASE_URL: postgresql+psycopg://analytics_ro:${ANALYTICS_RO_PASSWORD:-analytics_ro}@postgres:5432/novapromo
+  QDRANT_URL: http://qdrant:6333
+  ELASTICSEARCH_URL: http://elasticsearch:9200
+  REDIS_URL: redis://redis:6379/0
+  BATCH_MODE: worker
+  JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+  DEMO_PASSWORD: ${DEMO_PASSWORD:-demo}
+  LLM_PROVIDER: ${LLM_PROVIDER:-mock}
+  LLM_ROUTING: ${LLM_ROUTING:-false}
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+  VLLM_BASE_URL: ${VLLM_BASE_URL:-http://vllm:8000/v1}
+  VLLM_MODEL: ${VLLM_MODEL:-Qwen/Qwen2.5-7B-Instruct-AWQ}
+  VLLM_API_KEY: ${VLLM_API_KEY:-EMPTY}
+  EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-hash}
+  EMBEDDING_BASE_URL: ${EMBEDDING_BASE_URL:-http://localhost:8002/v1}
+  EMBEDDING_MODEL: ${EMBEDDING_MODEL:-intfloat/multilingual-e5-small}
+  EMBEDDING_DIM: ${EMBEDDING_DIM:-512}
+  RERANKER_PROVIDER: ${RERANKER_PROVIDER:-feature}
+  RERANKER_URL: ${RERANKER_URL:-http://localhost:8003/rerank}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: novapromo
+      POSTGRES_USER: novapromo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-novapromo}
+      ANALYTICS_RO_PASSWORD: ${ANALYTICS_RO_PASSWORD:-analytics_ro}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U novapromo -d novapromo"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.19.1
+    volumes:
+      - qdrant:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/6333' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.3
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"  # internal network only; enable TLS + auth in production
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      cluster.routing.allocation.disk.threshold_enabled: "false"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=2s || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  api:
+    build: .
+    image: novapromo/ai-platform:local
+    environment: *app-env
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      postgres: {condition: service_healthy}
+      qdrant: {condition: service_healthy}
+      elasticsearch: {condition: service_healthy}
+      redis: {condition: service_healthy}
+    restart: unless-stopped
+
+  worker:
+    image: novapromo/ai-platform:local
+    command: ["python", "-m", "services.batch.worker"]
+    environment: *app-env
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      disable: true
+    restart: unless-stopped
+
+  web:
+    build: ./apps/web
+    ports:
+      - "${WEB_PORT:-3000}:80"
+    depends_on:
+      api: {condition: service_healthy}
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------- monitoring profile
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    profiles: ["monitoring"]
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:12.1.1
+    profiles: ["monitoring"]
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./infra/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "${GRAFANA_PORT:-3001}:3000"
+    depends_on: [prometheus]
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------- vllm profile (NVIDIA GPU host)
+  vllm:
+    image: vllm/vllm-openai:latest
+    profiles: ["vllm"]
+    command:
+      - --model=${VLLM_MODEL:-Qwen/Qwen2.5-7B-Instruct-AWQ}
+      - --max-model-len=${VLLM_MAX_MODEL_LEN:-16384}
+      - --gpu-memory-utilization=${VLLM_GPU_MEMORY_UTILIZATION:-0.90}
+      - --enable-prefix-caching
+      - --enable-auto-tool-choice
+      - --tool-call-parser=hermes
+      - --api-key=${VLLM_API_KEY:-EMPTY}
+    environment:
+      HF_TOKEN: ${HF_TOKEN:-}
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+    ipc: host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  qdrant:
+  esdata:
+  redisdata:
+  hf-cache:

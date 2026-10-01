@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: novapromo
+    folder: NovaPromo
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards
