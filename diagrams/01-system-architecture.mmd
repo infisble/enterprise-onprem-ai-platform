@@ -1,0 +1,43 @@
+flowchart TB
+    subgraph Users["Users"]
+        E["Employees<br/>employee · sales · catalog_manager · admin"]
+        W["Public web chatbot<br/>(planned)"]
+    end
+
+    E --> UI["Web UI<br/>React + Vite"]
+    W -.-> GW
+    UI --> GW["FastAPI API gateway<br/>JWT auth · request tracing"]
+    GW --> RBAC{"RBAC<br/>role → permissions"}
+    RBAC --> AG["Agent / orchestration<br/>LangGraph · explicit tool registry"]
+
+    AG --> SRCH["Hybrid product search"]
+    AG --> RAG["Permission-aware RAG"]
+    AG --> TOOLS["Typed SQL business tools<br/>get_product_stock · get_product_price"]
+    AG --> CONTENT["Content workflow<br/>generate → validate → propose"]
+    AG --> APPR["Approval workflow<br/>human-in-the-loop"]
+
+    SRCH --> ES[("Elasticsearch<br/>BM25 · filters · facets")]
+    SRCH --> QD[("Qdrant<br/>product and document vectors")]
+    RAG --> QD
+    TOOLS --> SQL[("SQL source of truth<br/>MS SQL / PostgreSQL")]
+    APPR --> SQL
+    SRCH --> SQL
+
+    AG --> LLM["LLM provider interface<br/>OpenAI-compatible"]
+    LLM --> VLLM["vLLM on NVIDIA GPU<br/>(on-prem)"]
+    LLM -.-> OAI["OpenAI<br/>(optional)"]
+    LLM -.-> MOCK["Mock provider<br/>(CI / laptop)"]
+
+    subgraph Offline["Offline / batch"]
+        FEEDS["Supplier feeds<br/>XML · JSON · XLSX"] --> ING["Ingestion and normalisation"]
+        DOCS["PDF · DOCX · XLSX · MD"] --> ING
+        SCHED["Nightly scheduler"] --> Q[["Redis queue"]] --> WK["Batch workers"]
+    end
+    ING --> SQL
+    ING --> QD
+    ING --> ES
+    WK --> LLM
+    WK --> SQL
+
+    GW -. metrics .-> PROM["Prometheus → Grafana"]
+    GW -. "cache / sessions" .-> RED[("Redis")]

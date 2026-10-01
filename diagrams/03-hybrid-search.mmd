@@ -1,0 +1,13 @@
+flowchart TB
+    Q["black metal bottles around 750 ml under 15 EUR in stock"] --> PRE["Preprocessing<br/>diacritics · stemming · language detection"]
+    PRE --> FX["Structured filter extraction<br/>colour=black · material=metal → steel, aluminium<br/>category=drinkware · 637–862 ml · price ≤ 15 · in_stock"]
+    FX --> CODE{"Exact product code?<br/>NP-10042 · 29904.01"}
+    CODE -- yes --> KW["Keyword lookup<br/>sku / supplier_sku"] --> OUT
+    CODE -- no --> BM["BM25 · Elasticsearch<br/>query expansion + filters"]
+    CODE -- no --> VEC["ANN · Qdrant<br/>embedding + payload filters"]
+    BM --> RRF["Reciprocal Rank Fusion<br/>score = Σ 1 / (60 + rank)"]
+    VEC --> RRF
+    RRF --> RER["Reranker · top 30<br/>feature · cross-encoder · TEI"]
+    RER --> BR["Business rules vs SQL<br/>live stock · discontinued · lead time · diversity"]
+    BR --> OUT["Ranked products<br/>+ per-result explanation"]
+    FX -. "0 hits" .-> RELAX["Relax soft filters<br/>category, material"] -.-> BM

@@ -1,0 +1,21 @@
+flowchart TB
+    MSG["User message + JWT principal"] --> GUARD["guard<br/>jailbreak screening"]
+    GUARD --> ROUTE{"route<br/>rules by default, or LLM tool choice<br/>restricted to the tools of the role"}
+    ROUTE -->|search| N1["search_products"]
+    ROUTE -->|rag| N2["search_company_documents + answer"]
+    ROUTE -->|stock| N3["get_product_stock"]
+    ROUTE -->|price| N4["get_product_price"]
+    ROUTE -->|supplier| N5["get_supplier_info"]
+    ROUTE -->|analytics| N6["run_analytics_query<br/>AST-validated SQL"]
+    ROUTE -->|refuse| N7["refusal<br/>no PII tool exists"]
+    ROUTE -->|content| CG["content_gather<br/>get_product + guidelines"]
+    CG --> GEN["content_generate"]
+    GEN --> VAL["content_validate"]
+    VAL -->|"invalid, attempt < 2"| GEN
+    VAL -->|valid| PROP["prepare_product_update<br/>PENDING approval"]
+    N1 & N2 & N3 & N4 & N5 & N6 & N7 & PROP --> FIN["finalize<br/>answer · citations · tool log · trace"]
+
+    subgraph EXEC["Every tool call goes through ToolRegistry.execute"]
+        direction LR
+        A1["allowlist"] --> A2["RBAC check"] --> A3["Pydantic args"] --> A4["execute + span"] --> A5["audit and metrics"]
+    end

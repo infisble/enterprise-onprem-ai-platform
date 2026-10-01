@@ -1,0 +1,23 @@
+sequenceDiagram
+    autonumber
+    actor CM as Catalog manager
+    participant AG as Agent (LangGraph)
+    participant LLM as LLM (vLLM)
+    participant DB as SQL (source of truth)
+    actor AD as Admin
+    CM->>AG: Generate a new Slovak description for NP-10042
+    AG->>DB: get_product(NP-10042)
+    AG->>AG: search_company_documents(brand + copy guidelines)
+    AG->>LLM: generate_product_description(facts + guidelines)
+    LLM-->>AG: draft text
+    AG->>AG: validate_product_data(length, superlatives, prices, language, injection)
+    AG->>DB: prepare_product_update → pending (payload_hash, base_version, requested_by)
+    AG-->>CM: Draft + request pending approval (nothing written)
+    AD->>DB: approve (approver must differ from requester)
+    DB->>DB: publish: re-verify payload hash, check version == base_version
+    alt version unchanged
+        DB-->>AD: published · version+1 · content_source=ai · audit record
+        DB->>DB: re-index product (Elasticsearch + Qdrant)
+    else product changed meanwhile
+        DB-->>AD: conflict (stale proposal is never applied)
+    end

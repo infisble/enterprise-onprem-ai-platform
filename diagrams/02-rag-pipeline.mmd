@@ -1,0 +1,25 @@
+flowchart TB
+    subgraph Ingest["Ingestion (offline, batch)"]
+        direction LR
+        F["Files<br/>PDF · DOCX · XLSX · XML · JSON · MD"] --> P["File-type-aware parser<br/>sections · rows · records"]
+        P --> C["Cleaning<br/>boilerplate · hyphenation"]
+        C --> M["Metadata enrichment<br/>title · access_roles · language · locator"]
+        M --> K["Structure-aware chunking<br/>never across headings · 1 row = 1 chunk"]
+        K --> S["Injection scan<br/>flag at ingest"]
+        S --> EMB["Embedding"]
+        EMB --> QD[("Qdrant · documents<br/>vector + payload")]
+    end
+
+    subgraph Query["Query (online, per request)"]
+        direction LR
+        Q["Question + role"] --> QE["Query embedding"]
+        QE --> R[("ANN retrieval in Qdrant<br/>filter: access_roles contains role")]
+        R --> PF["Defence in depth<br/>role re-check · fail closed"]
+        PF --> RR["Rerank<br/>vector + lexical + heading"]
+        RR --> SAN["Sanitise untrusted text<br/>re-scan · redact"]
+        SAN --> CTX["Context assembly<br/>char budget · untrusted document tags"]
+        CTX --> LLM["LLM"]
+        LLM --> A["Answer + citations<br/>file · page · section · sheet · row"]
+    end
+
+    Ingest ~~~ Query

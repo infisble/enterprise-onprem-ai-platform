@@ -1,0 +1,16 @@
+flowchart TB
+    SCH["Nightly scheduler<br/>02:00 · once-per-day key in Redis"] --> JOB["Create job<br/>batch_jobs + batch_items rows"]
+    API["Admin UI / API"] --> JOB
+    JOB --> Q[["Redis list batch:jobs"]]
+    Q --> W1["Worker 1"]
+    Q --> W2["Worker N"]
+    W1 --> POOL["Thread pool<br/>BATCH_CONCURRENCY"]
+    W2 --> POOL
+    POOL --> T1["validate"] --> T2["generate SK<br/>if empty"] --> T3["translate SK → CS<br/>if empty"] --> T4["classification check"]
+    T2 & T3 & T4 --> LEDGER[("processing_ledger<br/>product · task · input_hash")]
+    T4 --> CP["Checkpoint every 25 items<br/>counters · last product id"]
+    CP --> IDX["Bulk re-embed + re-index"]
+    POOL -. TransientError .-> RETRY["Retry with exponential backoff<br/>max 3 attempts"]
+    RETRY -. exhausted .-> FAILED["item failed + last_error"]
+    FAILED --> RESUME["Resume job<br/>only pending / failed items"]
+    RESUME --> Q

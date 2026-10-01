@@ -1,0 +1,12 @@
+flowchart LR
+    S1["supplier_1.xml<br/>EuroGift (DE)<br/>comma decimals · German colours"] --> A1["EuroGiftXmlAdapter"]
+    S2["supplier_2.json<br/>PromoTex (CZ)<br/>price in cents · per-size stock"] --> A2["PromoTexJsonAdapter"]
+    S3["supplier_3.xlsx<br/>EcoLine (CZ)<br/>Czech headers · CZK"] --> A3["EcoLineXlsxAdapter"]
+    A1 & A2 & A3 --> N["Canonical NormalizedProduct<br/>Pydantic validation"]
+    N -->|invalid| REJ["Rejection report<br/>source row + reason"]
+    N --> X["SKU crosswalk<br/>existing NP SKU or allocate new"]
+    X --> UP["Idempotent upsert<br/>supplier-owned fields refreshed<br/>human / AI content preserved"]
+    UP --> SQL[("SQL")]
+    SQL --> IDX["Derived indexes"]
+    IDX --> ES[("Elasticsearch")]
+    IDX --> QD[("Qdrant")]

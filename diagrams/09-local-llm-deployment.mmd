@@ -1,0 +1,18 @@
+flowchart LR
+    subgraph APP["Application server (Docker)"]
+        API["API + agent"] --> PROV["LLM provider interface<br/>OpenAI-compatible client"]
+        WK["Batch workers"] --> PROV
+    end
+    subgraph GPU["On-prem NVIDIA GPU server"]
+        VLLM["vLLM<br/>Qwen2.5-14B-Instruct-AWQ<br/>PagedAttention · continuous batching<br/>prefix caching · tool parser"]
+        TEI["TEI embeddings<br/>bge-m3 / multilingual-e5"]
+        RER["TEI reranker<br/>bge-reranker-v2-m3"]
+        DCGM["DCGM exporter"]
+    end
+    PROV -- "/v1/chat/completions (LLM_PROVIDER=vllm)" --> VLLM
+    PROV -. "/v1/embeddings" .-> TEI
+    PROV -. "/rerank" .-> RER
+    PROV -. "optional fallback (LLM_PROVIDER=openai)" .-> OAI["External API"]
+    VLLM -- "/metrics: TTFT · tokens · KV cache · queue" --> PROM["Prometheus"]
+    DCGM -- "GPU util · memory · power" --> PROM
+    PROM --> GRAF["Grafana"]

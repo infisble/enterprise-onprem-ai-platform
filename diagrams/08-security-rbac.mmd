@@ -1,0 +1,15 @@
+flowchart TB
+    U["Request + JWT"] --> AUTH["1 · Authentication<br/>signed JWT, role claim"]
+    AUTH --> API["2 · API RBAC<br/>require(permission) per endpoint"]
+    API --> ROUTER["3 · Routing<br/>LLM only sees tools the role may use"]
+    ROUTER --> EXEC["4 · Tool executor<br/>allowlist · RBAC · Pydantic args · audit"]
+    EXEC --> READ["Read tools<br/>auto-execute"]
+    EXEC --> WRITE["Write tools<br/>create proposals only"]
+    WRITE --> HITL["5 · Human approval<br/>separation of duties · hash · version"]
+    READ --> DATA["6 · Data-level filters<br/>Qdrant access_roles filter<br/>+ post-filter, fail closed"]
+    DATA --> SAN["7 · Untrusted content handling<br/>injection scan · redaction · untrusted tags"]
+    SAN --> LLM["LLM"]
+    EXEC --> SQLG["8 · SQL guard (admin analytics)<br/>AST · SELECT-only · allowlist · LIMIT · timeout<br/>read-only DB role"]
+    EXEC -.-> AUD[("Audit log")]
+    HITL -.-> AUD
+    SQLG -.-> AUD
