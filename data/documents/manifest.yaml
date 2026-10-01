@@ -1,0 +1,37 @@
+# Access levels: all_staff | commercial (sales, catalog_manager, admin) | catalog | management (admin)
+company_policy.pdf:
+  title: Company Policy Handbook
+  access: all_staff
+  classification: internal
+shipping_rules.pdf:
+  title: Shipping Rules
+  access: all_staff
+  classification: internal
+supplier_terms.pdf:
+  title: Supplier Purchase Terms
+  access: commercial
+  classification: confidential
+supplier_notice_ecoline.pdf:
+  title: EcoLine Supplier Notice Q4 2026
+  access: all_staff
+  classification: external
+brand_guidelines.docx:
+  title: Brand Guidelines
+  access: all_staff
+  classification: internal
+product_copy_guidelines.docx:
+  title: Product Copy Guidelines
+  access: all_staff
+  classification: internal
+faq.md:
+  title: Internal FAQ
+  access: all_staff
+  classification: internal
+internal_pricing_margins.xlsx:
+  title: Pricing & Margin Policy
+  access: management
+  classification: restricted
+  sheets:
+    Margins: 'Category {Category}: target margin {Target margin %} %, minimum margin
+      {Minimum margin %} %, discount approver {Discount approver}.'
+    Discount approvals: Discount {Discount} must be approved by {Approver}.
